@@ -6,6 +6,9 @@ from multiprocessing import Process
 import csv
 from xml.etree import ElementTree as xmlet
 
+#TODO: отладить метод ObjTypeXmlFabric.generate и заменить согласено след todo(--->34)
+#from xmlutils import ObjTypeXmlFabric
+
 
 class Randomizer:
     def randomstr():
