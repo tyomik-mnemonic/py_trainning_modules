@@ -3,6 +3,9 @@ import string
 import random
 import os, shutil, glob, zipfile
 from multiprocessing import Process
+import csv
+from xml.etree import ElementTree as xmlet
+
 
 class Randomizer:
     def randomstr():
@@ -13,6 +16,7 @@ class Randomizer:
 
         return '\n'.join(f"""<{t} name="{Randomizer.randomstr()}"/>""" for i in range(r))
 
+    
 class AbcZiper(ABC):
     def __init__(self, shape:tuple):
         self.shape = tuple
@@ -23,6 +27,9 @@ class XMLZiper(AbcZiper):
         super().__init__(shape=shape)
         self.shape = shape
     
+    #Работа с xml так и не нашла себе места в структуре программы.
+    #TODO: вырвать метод fill из Ziper в отдельный соответствующий класс 
+    #      ObjTypeXml из соответствующей фабрики модуля xmlutils
     @staticmethod
     def unzip_it(path:str, f:str):
         try:
@@ -71,8 +78,6 @@ class XMLZiper(AbcZiper):
             self.rm_generated()
         return None
     
-import csv
-from xml.etree import ElementTree as xmlet
 
 class DataFile:
     
@@ -84,6 +89,8 @@ class DataFile:
             csvfile_writer = csv.writer(csvfile)
             csvfile_writer.writerow(self.columns)
 
+            
+#TODO:собрать "свободные" методы в соответствующий класс трансформирующий xml->csv
 def parse_docs(file:str, tag:str, task:str):
     print("FILEEE ", file+"\n"+"FILEEE")
     root = xmlet.parse(file).getroot()
@@ -104,8 +111,8 @@ def parse_objs(file:str, tags:list, tasks:list):
         result.append([pk, i.get(tasks[1])])
     return result
 
-
 def local_parse(f:str, writed_objs:list):
+    #TODO: пересмотреть положение вызова распаковки и мб перенести на более низкий ур-нь
     XMLZiper.unzip_it(os.getcwd(), f)
     f = glob.glob(f"{os.path.join(os.getcwd(), f.replace('.',''))}/*.xml")
     for i in f:
@@ -121,6 +128,11 @@ def local_parse(f:str, writed_objs:list):
 
 def parse(encoding='utf-8'):
     
+    data= XMLZiper((50,100))
+    data.to_zip()
+
+    DataFile(['id','level']).make_file('docs.csv')
+    DataFile(['id','object']).make_file('objs.csv')
     
     zips = glob.glob(f"{os.getcwd()}/*.zip")
     mid = zips.__len__()//2
@@ -147,6 +159,8 @@ def parse(encoding='utf-8'):
             local_parse(i,[docsfile_writer,objsfile_writer])
         return None
     
+    #В н.в. потоки используются неявно
+    #TODO: сделать потоки явными, вывести на верхний уровень
     process1 = Process(target=firstpart)
     process2 = Process(target=scndpart)
     process1.start()
@@ -155,10 +169,4 @@ def parse(encoding='utf-8'):
 
 
 if __name__ == "__main__":
-    x= XMLZiper((50,100))
-    x.to_zip()
-
-    DataFile(['id','level']).make_file('docs.csv')
-    DataFile(['id','object']).make_file('objs.csv')
-
     parse()
