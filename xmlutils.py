@@ -1,10 +1,12 @@
 from abc import ABC
-import copy 
+import copy
+import os
+from typing import Dict, List
 
 class AbcEditedXml(ABC):
-    def fill():
+    def fill(self):
         pass
-    def generate():
+    def generate(self):
         pass
 
 class AbcXMLFabric(ABC):
@@ -13,7 +15,7 @@ class AbcXMLFabric(ABC):
 
 class ObjTypeXml(AbcEditedXml):
     
-    def __init__(self, tasked_tags:dict):
+    def __init__(self, tasked_tags:Dict[str,str]):
         self.pattern = f"""
                     <root>
                         <var name="id" value=""/>
@@ -23,14 +25,14 @@ class ObjTypeXml(AbcEditedXml):
                     </root>"""
         self.tasked_tags = tasked_tags
      
-    def fill(self):
+    def fill(self) -> str:
         self.result = copy.deepcopy(self.pattern)
         for t,f in self.tasked_tags.items():
             self.result = self.result.replace(t,f)
         self.result = self.result.replace('\n','')
         return self.result
     
-    def generate(self):
+    def generate(self) -> None:
         path = os.path.join(os.getcwd(),dir_name)
         self.dir_name = path
         os.mkdir(path)
@@ -40,8 +42,8 @@ class ObjTypeXml(AbcEditedXml):
         return None
 
   
-class ObjTypeXmlFabric(AbcXMLFabric):
-    def make_xmlobj():
+class ObjTypeXmlFabric(AbcXMLFabric): 
+    def make_xmlobj() -> ObjTypeXml:
         return ObjTypeXml({
             'id" value="':f'id" value="{Randomizer.randomstr()}',
             'level" value="':f'level" value="{Randomizer.randomint(100)}',
