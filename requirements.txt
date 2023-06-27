@@ -1,0 +1,7 @@
+dynaconf
+fastapi
+sqlalchemy
+xlsxwriter
+openpyxl
+numpy
+pandas
