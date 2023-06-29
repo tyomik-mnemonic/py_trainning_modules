@@ -1,4 +1,5 @@
-from parser.reader import Reader
+from parser.cleaner import Cleaner
 
-result = Reader.read_xlxs_src()
+test = Cleaner()
+test.clean()
 pass
