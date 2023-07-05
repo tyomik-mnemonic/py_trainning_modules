@@ -9,3 +9,17 @@ default:
     db: 'postgres'
     user: 'postgres'
     passworld: 'postgres'
+
+  merged_cells_order:
+    fact_qoil_data_1: 'C3'
+    fact_qoil_data_2: 'D3'
+    forecast_qoil_data_1: 'G3'
+    forecast_qoil_data_2: 'H3'
+    fact_qliq_data_1: 'E3'
+    fact_qliq_data_2: 'F3'
+    forecast_qliq_data_1: 'I3'
+    forecast_qliq_data_2: 'J3'
+
+  date:
+    m:  '6'
+    y: '2022'

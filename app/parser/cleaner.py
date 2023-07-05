@@ -1,5 +1,7 @@
 from parser.reader import WbReader
 from settings.settings import settings
+from utils.date_setter import DateSetter
+import pandas as pd
 
 class Cleaner:
 
@@ -12,7 +14,10 @@ class Cleaner:
         
         for cell in list(self.active.merged_cells.ranges):
             self.active.unmerge_cells(cell.coord)
-        
-        for r in self.active['A1:J4']:
-            print(r)
+        dates = DateSetter().get_dates()
+        for i,v in enumerate(self.active['C3:J3'][0]):
+            v.value = dates[i]
+
+        df = pd.DataFrame(self.active.values)
         pass
+        
